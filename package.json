@@ -1,0 +1,19 @@
+{
+  "name": "graphqlmysql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alimuhammad01/graphql-products.git"
+  },
+  "author": "AliMuhammad",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alimuhammad01/graphql-products/issues"
+  },
+  "homepage": "https://github.com/alimuhammad01/graphql-products#readme"
+}
