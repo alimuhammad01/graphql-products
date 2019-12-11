@@ -8,7 +8,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      customer_id: {
+      CustomerId: {
         type: Sequelize.INTEGER,
         foreignKey: true,
         onDelete: 'CASCADE',

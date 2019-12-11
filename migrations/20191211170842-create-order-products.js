@@ -8,7 +8,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      product_id: {
+      ProductId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         foreignKey: true,
@@ -19,7 +19,7 @@ module.exports = {
           key: 'id',
         }
       },
-      order_id: {
+      OrderId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         foreignKey: true,

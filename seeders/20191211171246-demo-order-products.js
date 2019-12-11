@@ -7,8 +7,8 @@ module.exports = {
    
    return queryInterface.bulkInsert('order_products', 
    times(10, () => ({
-      product_id: faker.random.number({min:1,max:10}),
-      order_id: faker.random.number({min:1,max:10}),
+      ProductId: faker.random.number({min:1,max:10}),
+      OrderId: faker.random.number({min:1,max:10}),
       qty: faker.random.number({min:1,max:5})
     })
   ), 

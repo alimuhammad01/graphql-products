@@ -8,7 +8,7 @@ module.exports = {
     for(let i = 0; i < 10; i++) {
       const customer = await queryInterface.sequelize.query('SELECT id FROM customers ORDER BY RAND() LIMIT 1', { type: queryInterface.sequelize.QueryTypes.SELECT});
       orders.push({
-        customer_id: customer[0].id,
+        CustomerId: customer[0].id,
         created_date: faker.date.past(),
         delivery_date: faker.date.future(),
         total_cost: faker.commerce.price(),
