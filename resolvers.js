@@ -21,9 +21,36 @@ module.exports = {
       },
     },
     Query: {
-      products: (parent, args, { db }, info) => db.Products.findAll(),
+      products: async (parent, {offset, limit, minprice, maxprice, orderby}, { db }, info) => {
+        const where = (minprice || maxprice) ?
+            (minprice && maxprice) ?
+              {price: {[Op.between] : [minprice, maxprice]}}
+            :
+            (minprice) ?
+              {price: {[Op.gte]: minprice}}
+              :
+              {price: {[Op.lte]: maxprice}}  
+        : {};
+        const order  = (orderby == "ASC" || orderby == "DESC") ? orderby : 'ASC';
+        const products = await db.Products.findAll({
+          where: where,
+          offset,
+          limit,
+          order: [['id', order]],
+          raw: true
+        });
+
+        return products;
+      },
       product: (parent, args, { db }, info) => db.Products.findByPk(args.id),
-      orders: (parent, args, { db }, info) => db.Orders.findAll(),
+      orders: async (parent, {offset, limit}, { db }, info) => {
+        
+        const orders = await db.Orders.findAll({
+          offset,
+          limit
+        });
+        return orders;
+      },
       customer: (parent, args, { db }, info) => db.Customers.findByPk(args.id),
     },
     Mutation: {
@@ -77,7 +104,7 @@ module.exports = {
             throw new Error('Email already taken', 'email');
             return;
           }
-          const newCustomer = await db.Customers.update({
+          const updateCustomer = await db.Customers.update({
             name,
             email,
             street_address,
@@ -90,10 +117,66 @@ module.exports = {
             raw: true
           });
 
-          return {status: newCustomer[0]}
+          return {status: updateCustomer[0]}
         },
         deleteCustomer: async (parent, { id }, { db }, info) => {
           const deleted = await db.Customers.destroy({where: {id}});
+          return {status: deleted}
+        },
+        // Order Mutations
+        createOrder: async (parent, { created_date, delivery_date, total_cost, customer_id, products }, { db }, info) => {
+          const customer = await db.Customers.findOne({id:customer_id}, { raw: true});
+          if(!customer) {
+            throw new Error('Invalid customer', 'customer_id');
+            return;
+          }
+          const newOrder = await db.Orders.create({
+            created_date,
+            delivery_date,
+            total_cost,
+            CustomerId: customer_id,
+            raw: true
+          });
+          products.forEach(async (p) => {
+            await db.OrderProducts.create({
+              ProductId: p.product_id,
+              OrderId: newOrder.id,
+              qty: p.qty
+            })
+          })
+          return newOrder
+        }
+        ,
+        updateOrder: async (parent, { id, created_date, delivery_date, total_cost, customer_id, products }, { db }, info) => {
+          const order = await db.Orders.findOne({ where: {id}, raw: true});
+          if(!order) {
+            throw new Error('Invalid Order!', 'id');
+            return;
+          }
+          const updateOrder = await db.Orders.update({
+            created_date,
+            delivery_date,
+            total_cost,
+            CustomerId: customer_id
+          }, {
+            where: {id},
+            raw: true
+          });
+
+          await db.OrderProducts.destroy({ where : {OrderId: id}});
+
+          products.forEach(async (p) => {
+            await db.OrderProducts.create({
+              ProductId: p.product_id,
+              OrderId: newOrder.id,
+              qty: p.qty
+            })
+          });
+
+          return {status: updateOrder[0]}
+        },
+        deleteOrder: async (parent, { id }, { db }, info) => {
+          const deleted = await db.Orders.destroy({where: {id}});
           return {status: deleted}
         }
       }

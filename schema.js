@@ -1,16 +1,4 @@
 module.exports = `
-  scalar DateTime
-
-  type Date {
-    iso8601: DateTime!
-    # unix timestamp in milliseconds
-    timestamp: String!
-    # yyyymmdd: date formatted as 2019-01-01
-    yyyymmdd: String!
-    # {DATE_RSS} from EE
-    rss: String!
-  }
-
   type Product {
     id: ID!
     order: Order
@@ -18,8 +6,8 @@ module.exports = `
     description: String
     price: Float
     status: Boolean
-    createdAt: Date
-    updatedAt: Date
+    createdAt: String
+    updatedAt: String
     qty: String
   }
 
@@ -39,16 +27,21 @@ module.exports = `
     id: ID!
     customer: Customer
     products: [Product!]!
-    created_date: Date
-    delivery_date: Date
+    created_date: String
+    delivery_date: String
     total_cost: Float
     status: String
   }
   
+  input OrderProduct {
+    product_id: ID!
+    qty: Int!
+  }
+  
   type Query {
-    products: [Product!]!
+    products(offset: Int, limit: Int, minprice:Float, maxprice: Float, orderby: String): [Product!]!
     product(id: ID!): Product
-    orders: [Order!]!
+    orders(offset: Int, limit: Int, minprice:Float, maxprice: Float): [Order!]!
     customer(id: ID!): Customer!
   }
 
@@ -65,6 +58,10 @@ module.exports = `
     createCustomer(name:String!, email:String!, street_address:String!, city:String, state:String, zip_code:String, country:String): Customer!
     updateCustomer(id: ID!, name:String!, email:String!, street_address:String!, city:String, state:String, zip_code:String, country:String): MutationResponse
     deleteCustomer(id: ID!): MutationResponse
+    # Order Mutations
+    createOrder(created_date:String!, delivery_date:String!, total_cost:Float!, customer_id:Int!, products:[OrderProduct!]!): Order!
+    updateOrder(id: ID!, created_date:String!, delivery_date:String!, total_cost:Float!, status:String!, customer_id:Int!): MutationResponse
+    deleteOrder(id: ID!): MutationResponse
   }
   
 `;
