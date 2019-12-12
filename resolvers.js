@@ -31,5 +31,21 @@ module.exports = {
           price,
           status
         })
+        ,
+        updateProduct: async (parent, { id, name, description, price, status }, { db }, info) => {
+          const product = await db.Products.update({
+            name,
+            description,
+            price,
+            status
+          },{
+            where: {id}
+          });
+          return {status: product[0]};
+        },
+        deleteProduct: async (parent, { id }, { db }, info) => {
+          const deleted = await db.Products.destroy({where: {id}});
+          return {status: deleted}
+        }
       }
 };

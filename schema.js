@@ -52,8 +52,15 @@ module.exports = `
     customer(id: ID!): Customer!
   }
 
+  type MutationResponse {
+    status: Boolean
+  }
+  
+
   type Mutation {
     createProduct(name:String!, description:String!, price:Float!, status:Boolean!): Product!
+    updateProduct(id: ID!, name:String!, description:String!, price:Float!, status:Boolean!): MutationResponse
+    deleteProduct(id: ID!): MutationResponse
   }
   
 `;
