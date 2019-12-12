@@ -22,13 +22,19 @@ module.exports = `
 
   type Customer {
     id: ID!
-    name: String
-    email: String
+    name: String!
+    email: String!
     street_address: String
+    city: String
+    state: String
+    zip_code: String
+    country: String
+    orders: [Order!]
   }
   type Order {
-    CustomerId: [Customer!]!
-    created_date: Date!
+    id: ID!
+    customer: Customer
+    created_date: Date
     delivery_date: Date
     total_cost: Float
     status: String
@@ -36,6 +42,8 @@ module.exports = `
   type Query {
     products: [Product!]!
     product(id: ID!): Product
+    orders: [Order!]!
+    customer(id: ID!): Customer!
   }
 
   type Mutation {
