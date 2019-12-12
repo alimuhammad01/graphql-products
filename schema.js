@@ -61,6 +61,10 @@ module.exports = `
     createProduct(name:String!, description:String!, price:Float!, status:Boolean!): Product!
     updateProduct(id: ID!, name:String!, description:String!, price:Float!, status:Boolean!): MutationResponse
     deleteProduct(id: ID!): MutationResponse
+    # Customer Mutations
+    createCustomer(name:String!, email:String!, street_address:String!, city:String, state:String, zip_code:String, country:String): Customer!
+    updateCustomer(id: ID!, name:String!, email:String!, street_address:String!, city:String, state:String, zip_code:String, country:String): MutationResponse
+    deleteCustomer(id: ID!): MutationResponse
   }
   
 `;

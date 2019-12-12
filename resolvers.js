@@ -1,3 +1,6 @@
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
+
 module.exports = {
     Customer: {
       orders: (parent, args, context, info) => parent.getOrders(),
@@ -45,6 +48,52 @@ module.exports = {
         },
         deleteProduct: async (parent, { id }, { db }, info) => {
           const deleted = await db.Products.destroy({where: {id}});
+          return {status: deleted}
+        },
+        // Custormer mutations
+        createCustomer: async (parent, { name, email, street_address, city, state, zip_code, country }, { db }, info) => {
+          const customer = await db.Customers.findOne({ where: {email}, raw: true});
+          if(customer) {
+            throw new Error('Email already taken', 'email');
+            return;
+          }
+          const newCustomer = await db.Customers.create({
+            name,
+            email,
+            street_address,
+            city,
+            state,
+            zip_code,
+            country,
+            raw: true
+          });
+
+          return newCustomer
+        }
+        ,
+        updateCustomer: async (parent, { id, name, email, street_address, city, state, zip_code, country }, { db }, info) => {
+          const customer = await db.Customers.findOne({ where: {email, id: {[Op.ne]: id}}, raw: true});
+          if(customer) {
+            throw new Error('Email already taken', 'email');
+            return;
+          }
+          const newCustomer = await db.Customers.update({
+            name,
+            email,
+            street_address,
+            city,
+            state,
+            zip_code,
+            country
+          }, {
+            where: {id},
+            raw: true
+          });
+
+          return {status: newCustomer[0]}
+        },
+        deleteCustomer: async (parent, { id }, { db }, info) => {
+          const deleted = await db.Customers.destroy({where: {id}});
           return {status: deleted}
         }
       }
