@@ -4,7 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm start",
+    "dbsync": "node_modules/.bin/sequelize db:migrate --config config/config.json",
+    "seedall": "node_modules/.bin/sequelize db:seed:all --config config/config.json"
   },
   "repository": {
     "type": "git",
