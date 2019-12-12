@@ -39,7 +39,7 @@ module.exports = `
   }
   
   type Query {
-    products(offset: Int, limit: Int, minprice:Float, maxprice: Float, orderby: String): [Product!]!
+    products(offset: Int, limit: Int, minprice:Float, maxprice: Float, orderby: String, search_kw: String): [Product!]!
     product(id: ID!): Product
     orders(offset: Int, limit: Int, minprice:Float, maxprice: Float): [Order!]!
     customer(id: ID!): Customer!

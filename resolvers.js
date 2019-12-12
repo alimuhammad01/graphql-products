@@ -21,8 +21,8 @@ module.exports = {
       },
     },
     Query: {
-      products: async (parent, {offset, limit, minprice, maxprice, orderby}, { db }, info) => {
-        const where = (minprice || maxprice) ?
+      products: async (parent, {offset, limit, minprice, maxprice, orderby, search_kw}, { db }, info) => {
+        let where = (minprice || maxprice) ?
             (minprice && maxprice) ?
               {price: {[Op.between] : [minprice, maxprice]}}
             :
@@ -31,7 +31,13 @@ module.exports = {
               :
               {price: {[Op.lte]: maxprice}}  
         : {};
+        console.log(where);
         const order  = (orderby == "ASC" || orderby == "DESC") ? orderby : 'ASC';
+        where = (search_kw) ?
+          {name: {[Op.substring]: search_kw}, ...where}
+          :
+          where;
+        console.log(where);  
         const products = await db.Products.findAll({
           where: where,
           offset,
