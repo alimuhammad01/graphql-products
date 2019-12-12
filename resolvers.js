@@ -4,6 +4,18 @@ module.exports = {
     },
     Order: {
       customer: (parent, args, context, info) => parent.getCustomer(),
+      products: async (parent, args, { db }, info) => {
+        const orderProducts = await db.OrderProducts.findAll({
+          attributes: ['qty'],
+          where: {OrderId: parent.id},
+          include: { model: db.Products}
+        });
+        const orderProductsObject = JSON.parse(JSON.stringify(orderProducts));
+        const products = orderProductsObject.map((product) => {
+          return {qty: product.qty, ...product.Product};
+        });
+        return products;
+      },
     },
     Query: {
       products: (parent, args, { db }, info) => db.Products.findAll(),
@@ -13,12 +25,11 @@ module.exports = {
     },
     Mutation: {
       createProduct: (parent, { name, description, price, status }, { db }, info) => 
-      db.Products.create({
-        name,
-        description,
-        price,
-        status
-      })
-    }
-
+        db.Products.create({
+          name,
+          description,
+          price,
+          status
+        })
+      }
 };

@@ -10,14 +10,17 @@ module.exports = `
     # {DATE_RSS} from EE
     rss: String!
   }
+
   type Product {
     id: ID!
+    order: Order
     name: String!
     description: String
     price: Float
     status: Boolean
     createdAt: Date
     updatedAt: Date
+    qty: String
   }
 
   type Customer {
@@ -31,14 +34,17 @@ module.exports = `
     country: String
     orders: [Order!]
   }
+
   type Order {
     id: ID!
     customer: Customer
+    products: [Product!]!
     created_date: Date
     delivery_date: Date
     total_cost: Float
     status: String
   }
+  
   type Query {
     products: [Product!]!
     product(id: ID!): Product
@@ -47,7 +53,7 @@ module.exports = `
   }
 
   type Mutation {
-    createProduct(name:String!, description:String!, price:Float!, status:Boolean!): Product
+    createProduct(name:String!, description:String!, price:Float!, status:Boolean!): Product!
   }
   
 `;
