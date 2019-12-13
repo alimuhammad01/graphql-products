@@ -10,7 +10,11 @@ module.exports = (sequelize, DataTypes) => {
     country: DataTypes.STRING,
 
   }, {
-    timestamps: true
+    timestamps: true,
+    freezeTableName: true,
+
+    // define the table's name
+    tableName: 'customers'
   });
   Customers.associate = function(models) {
     Customers.hasMany(models.Orders, {

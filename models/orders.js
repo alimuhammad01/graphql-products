@@ -15,7 +15,11 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 'created'
     }
   }, {
-    timestamps: true
+    timestamps: true,
+    freezeTableName: true,
+
+    // define the table's name
+    tableName: 'orders'
   });
   Orders.associate = function(models) {
     Orders.belongsTo(models.Customers, {
